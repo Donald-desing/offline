@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Offline Music Player</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header>
+    <h1>Offline Music Player</h1>
+  </header>
+  
+  <div class="player">
+    <audio id="audioPlayer" controls></audio>
+    <div id="songInfo">
+      <span id="songName">No song selected</span>
+    </div>
+  </div>
+  
+  <div class="file-upload">
+    <label for="musicFiles">Select Music Files:</label>
+    <input type="file" id="musicFiles" accept="audio/*" multiple>
+  </div>
+  
+  <div class="song-list">
+    <h2>Your Songs</h2>
+    <ul id="songList"></ul>
+  </div>
+  
+  <script src="script.js"></script>
+</body>
+</html>
