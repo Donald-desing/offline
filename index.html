@@ -10,24 +10,30 @@
   <header>
     <h1>Offline Music Player</h1>
   </header>
-  
+
   <div class="player">
     <audio id="audioPlayer" controls></audio>
     <div id="songInfo">
       <span id="songName">No song selected</span>
     </div>
+    <div class="controls">
+      <button id="repeat">Repeat</button>
+      <button id="shuffle">Shuffle</button>
+      <button id="prev">Previous</button>
+      <button id="next">Next</button>
+    </div>
   </div>
-  
+
   <div class="file-upload">
     <label for="musicFiles">Select Music Files:</label>
     <input type="file" id="musicFiles" accept="audio/*" multiple>
   </div>
-  
+
   <div class="song-list">
-    <h2>Your Songs</h2>
+    <h2>Your Playlist</h2>
     <ul id="songList"></ul>
   </div>
-  
+
   <script src="script.js"></script>
 </body>
 </html>
