@@ -23,6 +23,13 @@ document.getElementById("repeatButton").addEventListener("click", toggleRepeat);
 audioPlayer.addEventListener("ended", handleSongEnd);
 audioPlayer.addEventListener("timeupdate", updateProgressBar);
 
+// Add Song button functionality
+document.getElementById("addSongButton").addEventListener("click", () => {
+  document.getElementById("songInput").click();
+});
+
+document.getElementById("songInput").addEventListener("change", handleFileSelect);
+
 function loadSong(songIndex) {
   const song = songs[songIndex];
   audioPlayer.src = song.file;
@@ -87,6 +94,19 @@ function updateProgressBar() {
 progressBar.addEventListener("input", () => {
   audioPlayer.currentTime = (progressBar.value / 100) * audioPlayer.duration;
 });
+
+function handleFileSelect(event) {
+  const file = event.target.files[0];
+  if (file) {
+    const fileURL = URL.createObjectURL(file);
+    songs.push({ title: file.name, artist: "Unknown Artist", file: fileURL });
+    currentSongIndex = songs.length - 1;
+    loadSong(currentSongIndex);
+    audioPlayer.play();
+    playPauseButton.textContent = "Pause";
+    isPlaying = true;
+  }
+}
 
 // Load the initial song
 loadSong(currentSongIndex);
