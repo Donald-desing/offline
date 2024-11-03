@@ -1,112 +1,44 @@
 const songs = [
-  { title: "Song 1", artist: "Artist 1", file: "song1.mp3" },
-  { title: "Song 2", artist: "Artist 2", file: "song2.mp3" },
-  { title: "Song 3", artist: "Artist 3", file: "song3.mp3" }
+  { id: 1, title: "Song 1", artist: "Artist 1", file: "song1.mp3" },
+  { id: 2, title: "Song 2", artist: "Artist 2", file: "song2.mp3" },
+  { id: 3, title: "Song 3", artist: "Artist 3", file: "song3.mp3" }
 ];
 
-let currentSongIndex = 0;
-let isPlaying = false;
-let isShuffle = false;
-let isRepeat = false;
+const playlist = [];
 
-const audioPlayer = document.getElementById("audioPlayer");
-const songTitle = document.getElementById("songTitle");
-const artistName = document.getElementById("artistName");
-const playPauseButton = document.getElementById("playPauseButton");
-const progressBar = document.getElementById("progressBar");
+window.onload = function() {
+  loadSongLibrary();
+  document.getElementById("addToPlaylistButton").addEventListener("click", addSelectedSongsToPlaylist);
+};
 
-document.getElementById("playPauseButton").addEventListener("click", togglePlayPause);
-document.getElementById("prevButton").addEventListener("click", playPreviousSong);
-document.getElementById("nextButton").addEventListener("click", playNextSong);
-document.getElementById("shuffleButton").addEventListener("click", toggleShuffle);
-document.getElementById("repeatButton").addEventListener("click", toggleRepeat);
-audioPlayer.addEventListener("ended", handleSongEnd);
-audioPlayer.addEventListener("timeupdate", updateProgressBar);
+// Function to load the song library
+function loadSongLibrary() {
+  const songList = document.getElementById("songList");
+  songList.innerHTML = "";
 
-// Add Song button functionality
-document.getElementById("addSongButton").addEventListener("click", () => {
-  document.getElementById("songInput").click();
-});
-
-document.getElementById("songInput").addEventListener("change", handleFileSelect);
-
-function loadSong(songIndex) {
-  const song = songs[songIndex];
-  audioPlayer.src = song.file;
-  songTitle.textContent = song.title;
-  artistName.textContent = song.artist;
+  songs.forEach(song => {
+    const li = document.createElement("li");
+    li.innerHTML = `
+      <input type="checkbox" class="song-checkbox" data-song-id="${song.id}">
+      <span>${song.title} - ${song.artist}</span>
+    `;
+    songList.appendChild(li);
+  });
 }
 
-function togglePlayPause() {
-  if (isPlaying) {
-    audioPlayer.pause();
-    playPauseButton.textContent = "Play";
-  } else {
-    audioPlayer.play();
-    playPauseButton.textContent = "Pause";
-  }
-  isPlaying = !isPlaying;
+// Function to add selected songs to the playlist
+function addSelectedSongsToPlaylist() {
+  const selectedSongs = document.querySelectorAll(".song-checkbox:checked");
+  
+  selectedSongs.forEach(checkbox => {
+    const songId = parseInt(checkbox.getAttribute("data-song-id"));
+    const song = songs.find(s => s.id === songId);
+    
+    if (!playlist.includes(song)) {
+      playlist.push(song);
+    }
+  });
+  
+  alert("Selected songs added to the playlist!");
+  console.log("Current Playlist:", playlist);
 }
-
-function playPreviousSong() {
-  currentSongIndex = (currentSongIndex - 1 + songs.length) % songs.length;
-  loadSong(currentSongIndex);
-  audioPlayer.play();
-  playPauseButton.textContent = "Pause";
-  isPlaying = true;
-}
-
-function playNextSong() {
-  if (isShuffle) {
-    currentSongIndex = Math.floor(Math.random() * songs.length);
-  } else {
-    currentSongIndex = (currentSongIndex + 1) % songs.length;
-  }
-  loadSong(currentSongIndex);
-  audioPlayer.play();
-  playPauseButton.textContent = "Pause";
-  isPlaying = true;
-}
-
-function toggleShuffle() {
-  isShuffle = !isShuffle;
-  document.getElementById("shuffleButton").textContent = isShuffle ? "Shuffle: On" : "Shuffle: Off";
-}
-
-function toggleRepeat() {
-  isRepeat = !isRepeat;
-  document.getElementById("repeatButton").textContent = isRepeat ? "Repeat: On" : "Repeat: Off";
-}
-
-function handleSongEnd() {
-  if (isRepeat) {
-    audioPlayer.play();
-  } else {
-    playNextSong();
-  }
-}
-
-function updateProgressBar() {
-  const progress = (audioPlayer.currentTime / audioPlayer.duration) * 100;
-  progressBar.value = progress || 0;
-}
-
-progressBar.addEventListener("input", () => {
-  audioPlayer.currentTime = (progressBar.value / 100) * audioPlayer.duration;
-});
-
-function handleFileSelect(event) {
-  const file = event.target.files[0];
-  if (file) {
-    const fileURL = URL.createObjectURL(file);
-    songs.push({ title: file.name, artist: "Unknown Artist", file: fileURL });
-    currentSongIndex = songs.length - 1;
-    loadSong(currentSongIndex);
-    audioPlayer.play();
-    playPauseButton.textContent = "Pause";
-    isPlaying = true;
-  }
-}
-
-// Load the initial song
-loadSong(currentSongIndex);
