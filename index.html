@@ -3,47 +3,23 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Music Player</title>
+  <title>Music Library</title>
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
   <header>
-    <h1>Music Player</h1>
+    <h1>Music Library</h1>
     <nav>
-      <a href="playlist.html">Manage Playlists</a>
+      <a href="playlist.html">View Playlists</a>
     </nav>
   </header>
 
-  <div class="player">
-    <div class="song-info">
-      <h2 id="songTitle">Song Title</h2>
-      <p id="artistName">Artist Name</p>
-    </div>
-
-    <audio id="audioPlayer" controls>
-      <source src="" type="audio/mp3">
-      Your browser does not support the audio element.
-    </audio>
-
-    <div class="controls">
-      <button id="prevButton">Previous</button>
-      <button id="playPauseButton">Play</button>
-      <button id="nextButton">Next</button>
-    </div>
-
-    <div class="additional-controls">
-      <button id="shuffleButton">Shuffle</button>
-      <button id="repeatButton">Repeat</button>
-    </div>
-
-    <div class="progress">
-      <input type="range" id="progressBar" min="0" max="100" value="0">
-    </div>
-    
-    <div class="add-song">
-      <input type="file" id="songInput" accept="audio/*" style="display: none;">
-      <button id="addSongButton">Add Song</button>
-    </div>
+  <div class="song-library">
+    <h2>Available Songs</h2>
+    <ul id="songList">
+      <!-- Songs will be dynamically loaded here -->
+    </ul>
+    <button id="addToPlaylistButton">Add Selected Songs to Playlist</button>
   </div>
 
   <script src="script.js"></script>
