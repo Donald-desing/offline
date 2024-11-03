@@ -3,40 +3,44 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Manage Playlists</title>
+  <title>Music Player</title>
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
   <header>
-    <h1>Playlist Management</h1>
+    <h1>Music Player</h1>
     <nav>
-      <a href="index.html">Back to Music Player</a>
+      <a href="playlist.html">Manage Playlists</a>
     </nav>
   </header>
 
-  <div class="playlist-creator">
-    <input type="text" id="newPlaylistName" placeholder="New Playlist Name">
-    <button id="createPlaylist">Create Playlist</button>
+  <div class="player">
+    <div class="song-info">
+      <h2 id="songTitle">Song Title</h2>
+      <p id="artistName">Artist Name</p>
+    </div>
+
+    <audio id="audioPlayer" controls>
+      <source src="" type="audio/mp3">
+      Your browser does not support the audio element.
+    </audio>
+
+    <div class="controls">
+      <button id="prevButton">Previous</button>
+      <button id="playPauseButton">Play</button>
+      <button id="nextButton">Next</button>
+    </div>
+
+    <div class="additional-controls">
+      <button id="shuffleButton">Shuffle</button>
+      <button id="repeatButton">Repeat</button>
+    </div>
+
+    <div class="progress">
+      <input type="range" id="progressBar" min="0" max="100" value="0">
+    </div>
   </div>
 
-  <div class="playlist-manager">
-    <h2>Your Playlists</h2>
-    <select id="playlistSelect">
-      <option value="" disabled selected>Select a playlist</option>
-    </select>
-    <button id="addSelectedSongs">Add Selected Songs to Playlist</button>
-  </div>
-
-  <div class="song-selection">
-    <h2>All Songs</h2>
-    <ul id="selectableSongs"></ul>
-  </div>
-
-  <div class="playlist-songs">
-    <h2>Playlist Songs</h2>
-    <ul id="playlistSongs"></ul>
-  </div>
-
-  <script src="playlist.js"></script>
+  <script src="script.js"></script>
 </body>
 </html>
