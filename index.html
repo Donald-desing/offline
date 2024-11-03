@@ -3,42 +3,31 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Offline Music Player with Multiple Playlists</title>
+  <title>Music Library</title>
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
   <header>
-    <h1>Offline Music Player</h1>
+    <h1>Music Library</h1>
+    <nav>
+      <a href="playlist.html">View Playlists</a>
+    </nav>
   </header>
 
-  <div class="playlist-manager">
-    <input type="text" id="playlistNameInput" placeholder="New Playlist Name">
-    <button id="createPlaylist">Create Playlist</button>
-    <select id="playlistSelect"></select>
+  <div class="library">
+    <h2>All Songs</h2>
+    <button onclick="addNewSong()">Add Song</button>
+    <ul id="songList"></ul>
+    <button id="addToPlaylistButton">Add Selected Songs to Playlist</button>
   </div>
 
   <div class="player">
+    <h2>Now Playing</h2>
+    <div id="songDetails">No song selected</div>
     <audio id="audioPlayer" controls></audio>
-    <div id="songInfo">
-      <span id="songName">No song selected</span>
-    </div>
-    <div class="controls">
-      <button id="repeat">Repeat</button>
-      <button id="shuffle">Shuffle</button>
-      <button id="prev">Previous</button>
-      <button id="next">Next</button>
-    </div>
-  </div>
-
-  <div class="file-upload">
-    <label for="musicFiles">Select Music Files:</label>
-    <input type="file" id="musicFiles" accept="audio/*" multiple>
-    <button id="addToPlaylist">Add to Playlist</button>
-  </div>
-
-  <div class="song-list">
-    <h2>Your Songs</h2>
-    <ul id="songList"></ul>
+    <button onclick="prevSong()">Previous</button>
+    <button onclick="playPause()">Play/Pause</button>
+    <button onclick="nextSong()">Next</button>
   </div>
 
   <script src="script.js"></script>
