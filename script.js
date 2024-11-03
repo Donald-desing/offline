@@ -1,100 +1,78 @@
-document.getElementById("musicFiles").addEventListener("change", loadSongs);
+const playlists = {};  // Store playlists with their respective songs
+
 document.getElementById("createPlaylist").addEventListener("click", createPlaylist);
-document.getElementById("playlistSelect").addEventListener("change", loadPlaylistSongs);
-document.getElementById("addToPlaylist").addEventListener("click", addToPlaylist);
-document.getElementById("repeat").addEventListener("click", toggleRepeat);
-document.getElementById("shuffle").addEventListener("click", toggleShuffle);
-document.getElementById("next").addEventListener("click", playNextSong);
-document.getElementById("prev").addEventListener("click", playPreviousSong);
+document.getElementById("addSelectedSongs").addEventListener("click", addSongsToPlaylist);
+document.getElementById("playlistSelect").addEventListener("change", displayPlaylistSongs);
 
-const audioPlayer = document.getElementById("audioPlayer");
-const songList = document.getElementById("songList");
-
-let playlists = {};  // Object to store playlists with song arrays
-let currentPlaylist = 'Default';
-let currentIndex = 0;
-let isRepeating = false;
-let isShuffling = false;
+// Load songs into the song selection list on the playlist page
+window.addEventListener("load", loadSelectableSongs);
 
 function createPlaylist() {
-  const playlistName = document.getElementById("playlistNameInput").value.trim();
+  const playlistName = document.getElementById("newPlaylistName").value.trim();
   if (playlistName && !playlists[playlistName]) {
     playlists[playlistName] = [];
     const option = document.createElement("option");
     option.value = playlistName;
     option.textContent = playlistName;
     document.getElementById("playlistSelect").appendChild(option);
-    document.getElementById("playlistNameInput").value = '';
+    document.getElementById("newPlaylistName").value = '';
   }
 }
 
-function loadSongs(event) {
-  const files = event.target.files;
-  const songs = Array.from(files);
-  playlists[currentPlaylist] = playlists[currentPlaylist].concat(songs);
-  displaySongs(playlists[currentPlaylist]);
-}
-
-function displaySongs(songs) {
-  songList.innerHTML = "";
-  songs.forEach((song, index) => {
+function loadSelectableSongs() {
+  const selectableSongsList = document.getElementById("selectableSongs");
+  selectableSongsList.innerHTML = "";
+  songLibrary.forEach((song, index) => {
     const listItem = document.createElement("li");
     listItem.textContent = song.name;
-    listItem.addEventListener("click", () => playSong(index));
-    songList.appendChild(listItem);
+    listItem.dataset.index = index;
+    listItem.addEventListener("click", () => toggleSongSelection(listItem));
+    selectableSongsList.appendChild(listItem);
   });
 }
 
-function addToPlaylist() {
-  const files = document.getElementById("musicFiles").files;
-  const songs = Array.from(files);
-  playlists[currentPlaylist] = playlists[currentPlaylist].concat(songs);
-  displaySongs(playlists[currentPlaylist]);
+function toggleSongSelection(listItem) {
+  listItem.classList.toggle("selected");
 }
 
-function loadPlaylistSongs() {
-  currentPlaylist = document.getElementById("playlistSelect").value;
-  displaySongs(playlists[currentPlaylist] || []);
+function addSongsToPlaylist() {
+  const selectedPlaylist = document.getElementById("playlistSelect").value;
+  if (!selectedPlaylist) return;
+
+  const selectedSongs = Array.from(document.querySelectorAll(".song-selection .selected"));
+  selectedSongs.forEach(item => {
+    const songIndex = item.dataset.index;
+    const song = songLibrary[songIndex];
+    if (!playlists[selectedPlaylist].includes(song)) {
+      playlists[selectedPlaylist].push(song);
+    }
+  });
+
+  displayPlaylistSongs(); // Refresh the playlist view
+  selectedSongs.forEach(item => item.classList.remove("selected"));
 }
 
-function playSong(index) {
-  currentIndex = index;
-  const song = playlists[currentPlaylist][currentIndex];
-  const songURL = URL.createObjectURL(song);
-  audioPlayer.src = songURL;
-  document.getElementById("songName").textContent = song.name;
-  audioPlayer.play();
-}
+function displayPlaylistSongs() {
+  const selectedPlaylist = document.getElementById("playlistSelect").value;
+  const playlistSongsList = document.getElementById("playlistSongs");
+  playlistSongsList.innerHTML = "";
 
-function playNextSong() {
-  if (isShuffling) {
-    currentIndex = Math.floor(Math.random() * playlists[currentPlaylist].length);
-  } else {
-    currentIndex = (currentIndex + 1) % playlists[currentPlaylist].length;
+  if (selectedPlaylist && playlists[selectedPlaylist]) {
+    playlists[selectedPlaylist].forEach((song, index) => {
+      const listItem = document.createElement("li");
+      listItem.textContent = song.name;
+
+      const removeButton = document.createElement("button");
+      removeButton.textContent = "Remove";
+      removeButton.addEventListener("click", () => removeSongFromPlaylist(selectedPlaylist, index));
+
+      listItem.appendChild(removeButton);
+      playlistSongsList.appendChild(listItem);
+    });
   }
-  playSong(currentIndex);
 }
 
-function playPreviousSong() {
-  currentIndex = (currentIndex - 1 + playlists[currentPlaylist].length) % playlists[currentPlaylist].length;
-  playSong(currentIndex);
+function removeSongFromPlaylist(playlistName, songIndex) {
+  playlists[playlistName].splice(songIndex, 1); // Remove song from playlist array
+  displayPlaylistSongs(); // Refresh the playlist view
 }
-
-function toggleRepeat() {
-  isRepeating = !isRepeating;
-  document.getElementById("repeat").classList.toggle("active", isRepeating);
-}
-
-function toggleShuffle() {
-  isShuffling = !isShuffling;
-  document.getElementById("shuffle").classList.toggle("active", isShuffling);
-}
-
-// Automatically play the next song when the current one ends
-audioPlayer.addEventListener("ended", () => {
-  if (isRepeating) {
-    playSong(currentIndex);
-  } else {
-    playNextSong();
-  }
-});
